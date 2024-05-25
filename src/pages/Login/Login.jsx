@@ -1,7 +1,40 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
+import useAuth from '../../hooks/useAuth'
+import { TbFidgetSpinner } from 'react-icons/tb'
+import { getToken } from '../../api/auth'
+import toast from 'react-hot-toast'
 
 const Login = () => {
+
+  const {signIn, loading} = useAuth()
+
+  const navigate = useNavigate();
+
+
+  // handle login 
+  const handleLogin = async (event) =>{
+    event.preventDefault();
+    const form = event.target;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    // console.log(email, password);
+
+    try {
+      //user login
+      const result = await signIn(email, password);
+
+      // get token 
+      await getToken(result?.user?.email)
+      navigate('/')
+      toast.success('Login Successful')
+
+    } catch (error) {
+      toast.error(error?.message)
+    }
+  }
+
   return (
     <div className='flex justify-center items-center min-h-screen'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
@@ -12,6 +45,7 @@ const Login = () => {
           </p>
         </div>
         <form
+          onSubmit={handleLogin}
           noValidate=''
           action=''
           className='space-y-6 ng-untouched ng-pristine ng-valid'
@@ -54,7 +88,7 @@ const Login = () => {
               type='submit'
               className='bg-rose-500 w-full rounded-md py-3 text-white'
             >
-              Continue
+              {loading ? (<TbFidgetSpinner className='animate-spin mx-auto'/>) : ('Continue')}
             </button>
           </div>
         </form>
