@@ -2,18 +2,18 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
 import useAuth from '../../hooks/useAuth'
 import { TbFidgetSpinner } from 'react-icons/tb'
-import { getToken } from '../../api/auth'
+import { getToken, saveUser } from '../../api/auth'
 import toast from 'react-hot-toast'
 
 const Login = () => {
 
-  const {signIn, loading} = useAuth()
+  const { signIn, loading, signInWithGoogle } = useAuth()
 
   const navigate = useNavigate();
 
 
   // handle login 
-  const handleLogin = async (event) =>{
+  const handleLogin = async (event) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
@@ -32,6 +32,25 @@ const Login = () => {
 
     } catch (error) {
       toast.error(error?.message)
+    }
+  }
+
+  // handle google sign in 
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithGoogle()
+
+      // save user to db 
+      const dbResponse = await saveUser(result?.user?.email);
+      console.log(dbResponse);
+
+      // get token 
+      await getToken(result?.user?.email)
+      navigate('/')
+      toast.success('signup successfull')
+
+    } catch (error) {
+      console.log(error.message);
     }
   }
 
@@ -88,7 +107,7 @@ const Login = () => {
               type='submit'
               className='bg-rose-500 w-full rounded-md py-3 text-white'
             >
-              {loading ? (<TbFidgetSpinner className='animate-spin mx-auto'/>) : ('Continue')}
+              {loading ? (<TbFidgetSpinner className='animate-spin mx-auto' />) : ('Continue')}
             </button>
           </div>
         </form>
@@ -104,7 +123,7 @@ const Login = () => {
           </p>
           <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
         </div>
-        <div className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
+        <div onClick={handleGoogleSignIn} className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
           <FcGoogle size={32} />
 
           <p>Continue with Google</p>

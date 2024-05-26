@@ -11,19 +11,16 @@ const MenuDropdown = () => {
   const links = <>
     <div className='hidden md:flex flex-row  font-semibold md:gap-7 lg:gap-10 '>
       <NavLink to={'/'} className={({ isActive }) => `hover:bg-slate-200 rounded-md px-2 py-1 ${isActive && "bg-gray-200"}`}>Home</NavLink>
-      <NavLink to={'/create'} className={({ isActive }) => `hover:bg-slate-200 rounded-md px-2 py-1 ${isActive && "bg-gray-200"}`}>Create-Store</NavLink>
-      <NavLink to={'/watch'} className={({ isActive }) => `hover:bg-slate-200 rounded-md px-2 py-1 ${isActive && "bg-gray-200"}`}>Watch Demo</NavLink>
+      <NavLink to={'/create-store'} className={({ isActive }) => `hover:bg-slate-200 rounded-md px-2 py-1 ${isActive && "bg-gray-200"}`}>Create-Store</NavLink>
+      <NavLink to={'/watch-demo'} className={({ isActive }) => `hover:bg-slate-200 rounded-md px-2 py-1 ${isActive && "bg-gray-200"}`}>Watch Demo</NavLink>
     </div>
   </>
 
-  const handdleLogOut = async () =>{
-    const result = logOut();
-    console.log(result);
-  }
 
   return (
     <>
       {links}
+
       {
         user ? (
           <div className='relative'>
@@ -56,14 +53,13 @@ const MenuDropdown = () => {
                   >
                     Home
                   </Link>
-                  <Link
-                    to='/'
+
+                  <Link to='/create-store'
                     className='block md:hidden px-4 py-3 hover:bg-neutral-100 transition font-semibold text-center'
-                  >
-                    Create-Store
-                  </Link>
+                  >Create-Store</Link>
+                  
                   <Link
-                    to='/'
+                    to='/watch-demo'
                     className='block md:hidden px-4 py-3 hover:bg-neutral-100 transition font-semibold text-center'
                   >
                     Watch Demo
@@ -75,7 +71,7 @@ const MenuDropdown = () => {
                   >
                     Dashboard
                   </Link>
-                  <button onClick={handdleLogOut} className='px-4 py-3 hover:bg-neutral-100 transition font-semibold'>Log Out</button>
+                  <button onClick={logOut} className='px-4 py-3 hover:bg-neutral-100 transition font-semibold'>Log Out</button>
                 </div>
               </div>
             )}
