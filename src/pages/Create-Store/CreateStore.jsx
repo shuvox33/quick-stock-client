@@ -2,6 +2,7 @@ import { TbFidgetSpinner } from "react-icons/tb";
 import useAuth from "../../hooks/useAuth";
 import { createStore, imageUpload } from "../../api/utils";
 import toast from "react-hot-toast";
+import { updateRole } from "../../api/auth";
 
 const CreateStore = () => {
 
@@ -33,6 +34,11 @@ const CreateStore = () => {
             // save store info in db 
             const result = createStore(storeInfo);
             console.log(result);
+
+            //update roles
+            const roleResult = updateRole(user?.email, "manager")
+            console.log(roleResult);
+
 
 
         } catch (error) {

@@ -22,3 +22,13 @@ export const clearCookie = async () =>{
     const {data} = await axiosSecure.get('/logout')
     return data;
 }
+
+export const updateRole = async(email, role) =>{
+    const roleInfo={
+        email,
+        role
+    }
+    const {data} = await axiosSecure.put(`/user/update/${email}`, roleInfo)
+
+    return data;
+}

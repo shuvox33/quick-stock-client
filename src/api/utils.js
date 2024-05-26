@@ -12,6 +12,3 @@ export const createStore = async (storeInfo) => {
     const { data } = await axiosSecure.post('/create-store', storeInfo)
     return data;
 }
-
-
-
