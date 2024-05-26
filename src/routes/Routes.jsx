@@ -5,6 +5,7 @@ import ErrorPage from '../pages/ErrorPage'
 import Login from '../pages/Login/Login'
 import SignUp from '../pages/SignUp/SignUp'
 import CreateStore from '../pages/Create-Store/CreateStore'
+import PrivateRoutes from './PrivateRoutes'
 
 export const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'create-store',
-        element: <CreateStore></CreateStore>,
+        element: <PrivateRoutes><CreateStore></CreateStore></PrivateRoutes>,
       },
     ],
   },
