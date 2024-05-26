@@ -8,7 +8,7 @@ import { TbFidgetSpinner } from 'react-icons/tb'
 
 const SignUp = () => {
 
-  const { user, loading, createUser, signInWithGoogle, updateUserProfile } = useAuth();
+  const { loading, createUser, signInWithGoogle, updateUserProfile } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -31,7 +31,7 @@ const SignUp = () => {
       await updateUserProfile(name, imageData?.data?.display_url)
 
       // save user
-      const dbResponse = await saveUser(user);
+      const dbResponse = await saveUser(result?.user?.email);
       console.log(dbResponse);
 
       // get token
@@ -56,7 +56,7 @@ const SignUp = () => {
         const result = await signInWithGoogle()
 
         // save user to db 
-        const dbResponse = await saveUser(user);
+        const dbResponse = await saveUser(result?.user?.email);
         console.log(dbResponse);
 
         // get token 
