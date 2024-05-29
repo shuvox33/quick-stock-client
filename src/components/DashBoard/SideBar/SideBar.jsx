@@ -6,15 +6,11 @@ import useRole from "../../../hooks/useRole";
 import Logo from "../../Shared/Logo";
 import ManagerMenu from "../Menu/ManagerMenu";
 
-
 const SideBar = () => {
 
     const [isActive, setActive] = useState(false)
     const { logOut } = useAuth()
     const [role] = useRole()
-
-    console.log(role); 
-
 
     // Sidebar Responsive Handler
     const handleToggle = () => {
