@@ -1,12 +1,18 @@
-import { useState } from "react";
-import { isEmptyShop } from "../../../api/product";
+import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import AddProductModal from "../../../components/Modal/AddProductModal";
+import { totalProduct } from "../../../api/product";
 
 const ProductManagement = () => {
 
     const { user } = useAuth();
-    const result = isEmptyShop(user?.email);
+
+    const [productCount, setProductCount] = useState({})
+    useEffect(() => {
+        totalProduct(user?.email).then(data => setProductCount(data.count))
+    }, [user?.email])
+
+    console.log(productCount);
 
     const [openModal, setOpenModal] = useState(false);
 
@@ -14,23 +20,24 @@ const ProductManagement = () => {
         setOpenModal(false);
     }
 
-    console.log(result);
     return (
-        <div>
-            <div>
-                <h3>No Product Added</h3>
-                {/* <Button onClick={() => setOpenModal(true)}>Toggle modal</Button> */}
-                <button onClick={()=> setOpenModal(true)} className="bg-cyan-400 text-white px-4 py-2 rounded-lg">Add Product</button>
-            </div>
-
-            <div>
-
+        <>
+            <div className="flex justify-center items-center ">
+                <div >
+                    <h2 className={`${!productCount ? 'hidden' : ''} text-3xl border-y-2  border-black py-2 px-5`}>Total {productCount} Product Added</h2>
+                </div>
+                <div className="text-center">
+                    {
+                        !productCount && <h3 className="text-2xl mb-3">No Product Added</h3>
+                    }
+                    <button onClick={() => setOpenModal(true)} className="bg-cyan-400 text-white px-4 py-4 rounded-sm ">Add Product</button>
+                </div>
             </div>
 
             {/* modal  */}
-            <AddProductModal  openModal={openModal} setOpenModal={setOpenModal} onCloseModal={onCloseModal}/>
+            <AddProductModal openModal={openModal} onCloseModal={onCloseModal} />
 
-        </div >
+        </ >
     );
 };
 

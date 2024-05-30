@@ -41,8 +41,8 @@ const Login = () => {
       const result = await signInWithGoogle()
 
       // save user to db 
-      const dbResponse = await saveUser(result?.user?.email);
-      console.log(dbResponse);
+      await saveUser(result?.user?.email);
+
 
       // get token 
       await getToken(result?.user?.email)

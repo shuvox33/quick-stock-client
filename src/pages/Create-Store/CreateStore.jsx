@@ -3,14 +3,16 @@ import useAuth from "../../hooks/useAuth";
 import { createStore, imageUpload } from "../../api/utils";
 import toast from "react-hot-toast";
 import { updateRole } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 const CreateStore = () => {
+    const navigate = useNavigate();
 
     const handleSubmit = async(e)=>{
 
         e.preventDefault();
         const form = e.target;
-        const shopName = form.shop.value;
+        const storeName = form.store.value;
         const location = form.location.value;
         const description = form.description.value;
         const ownerName = user?.displayName;
@@ -21,8 +23,9 @@ const CreateStore = () => {
             //upload log in imgbb
             const logoData = await imageUpload(logo);
 
+
             const storeInfo ={
-                shopName,
+                storeName,
                 logo : logoData?.data?.display_url,
                 description,
                 location,
@@ -32,14 +35,13 @@ const CreateStore = () => {
             }
 
             // save store info in db 
-            const result = createStore(storeInfo);
-            console.log(result);
+            createStore(storeInfo);
 
             //update roles
-            const roleResult = updateRole(user?.email, "manager")
-            console.log(roleResult);
+            updateRole(user?.email, "manager")
 
-
+            toast.success("Store Created")
+            navigate('/dashboard');
 
         } catch (error) {
             console.log(error);
@@ -65,12 +67,12 @@ const CreateStore = () => {
                     <div className='space-y-4'>
                         <div>
                             <label htmlFor='shop' className='block mb-2 text-sm'>
-                                Shop Name
+                                Store Name
                             </label>
                             <input
                                 required
                                 type='text'
-                                name='shop'
+                                name='store'
                                 id='shop'
                                 placeholder='Enter Your Shop Name Here'
                                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900'
