@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { imageUpload } from "../../api/utils";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
-import { addProduct } from "../../api/product";
+import { addProduct, reduceLimit } from "../../api/product";
 import { getStoreInfo } from "../../api/auth";
 
 const AddProductModal = ({ openModal, onCloseModal }) => {
@@ -18,7 +18,6 @@ const AddProductModal = ({ openModal, onCloseModal }) => {
             const imageData = await imageUpload(image);
 
             const storeInfo = await getStoreInfo(user?.email)
-            console.log(storeInfo);
 
             const sellingPriceCal=()=>{
                 const costWithtax = formInfo?.cost + ((formInfo?.cost * 7.5)/100);
@@ -36,13 +35,14 @@ const AddProductModal = ({ openModal, onCloseModal }) => {
                 profitMargin:formInfo?.profitMargin,
                 discount:formInfo?.discount,
                 image:imageData?.data?.display_url,
-                shopName:storeInfo?.shopName,
+                shopName:storeInfo?.storeName,
                 ownerEmail:storeInfo?.ownerEmail,
                 sellingPrice:sellingPriceCal(),
                 saleCount: 0,
             }
 
             addProduct(productInfo);
+            reduceLimit(storeInfo?.ownerEmail, {limit:storeInfo?.limit})
             toast.success('Product Added Successfuly');
             onCloseModal();
 

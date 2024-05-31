@@ -38,8 +38,8 @@ export const getRole = async(email)=>{
     return data.role;
 
 }
-export const getOwnerInfo = async(email)=>{
-    const {data} = await axiosSecure.get(`/user/owner-info/${email}`);
+export const getUserInfo = async(email)=>{
+    const {data} = await axiosSecure.get(`/user-info/${email}`);
     return data;
 
 }
