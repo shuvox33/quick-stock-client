@@ -7,7 +7,8 @@ import SignUp from '../pages/SignUp/SignUp'
 import CreateStore from '../pages/Create-Store/CreateStore'
 import PrivateRoutes from './PrivateRoutes'
 import DashBoardLayout from '../layouts/DashBoardLayout'
-import ProductManagement from '../pages/DashBoard/Manager/ProductManagement'
+import ProductManagement from '../pages/DashBoard/Manager/ProductManagement/ProductManagement'
+
 
 export const router = createBrowserRouter([
   {

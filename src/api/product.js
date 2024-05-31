@@ -14,3 +14,7 @@ export const reduceLimit = async(email,limit)=>{
     const {data} = await axiosSecure.patch(`/reduce-limit/${email}`, limit);
     return data;
 }
+export const allAddedProduct = async(email)=>{
+    const {data} = await axiosSecure.get(`/added-product/${email}`);
+    return data;
+}

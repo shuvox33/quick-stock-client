@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import useAuth from "../../../hooks/useAuth";
-import AddProductModal from "../../../components/Modal/AddProductModal";
-import { totalProduct } from "../../../api/product";
-import { getStoreInfo } from "../../../api/auth";
+import useAuth from "../../../../hooks/useAuth";
+import AddProductModal from "../../../../components/Modal/AddProductModal";
+import { totalProduct } from "../../../../api/product";
+import { getStoreInfo } from "../../../../api/auth";
 import { useNavigate } from 'react-router-dom'
 import toast from "react-hot-toast";
+import ProductList from "./ProductList";
 
 
 const ProductManagement = () => {
@@ -30,8 +31,8 @@ const ProductManagement = () => {
         }
         else setOpenModal(true)
     }
-    const [openModal, setOpenModal] = useState(false);
 
+    const [openModal, setOpenModal] = useState(false);
     function onCloseModal() {
         setOpenModal(false);
     }
@@ -52,7 +53,8 @@ const ProductManagement = () => {
 
             {/* modal  */}
             <AddProductModal openModal={openModal} onCloseModal={onCloseModal} />
-
+            {/* product list  */}
+            <ProductList></ProductList>
         </>
     );
 };
