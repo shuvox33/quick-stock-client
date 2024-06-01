@@ -18,3 +18,8 @@ export const allAddedProduct = async(email)=>{
     const {data} = await axiosSecure.get(`/added-product/${email}`);
     return data;
 }
+
+export const updateProduct = async(id, product)=>{
+    const {data} = await axiosSecure.patch(`/update-product/${id}`,product);
+    return data;
+}

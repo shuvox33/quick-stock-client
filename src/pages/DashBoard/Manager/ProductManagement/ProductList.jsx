@@ -1,18 +1,26 @@
-import { useEffect, useState } from "react";
 import useAuth from "../../../../hooks/useAuth";
-import { allAddedProduct } from "../../../../api/product";
 import ProductRow from "../../../../components/TableRow/ProductRow";
+import { useQuery } from "@tanstack/react-query";
+import Loader from '../../../../components/Shared/Loader'
+import axiosSecure from "../../../../api";
 
 const ProductList = () => {
 
     const { user } = useAuth();
-    const [products, setProducts] = useState(null);
 
-    useEffect(() => {
-        allAddedProduct(user?.email).then(data => setProducts(data))
-    }, [user?.email])
+    const {data:products=[], isLoading, refetch} = useQuery({
+        queryKey:['product-list', user?.email],
+        queryFn: async ()=> {
+            const {data} = await axiosSecure.get(`/added-product/${user?.email}`)
+            // const {data} = await allAddedProduct(user?.email)
+            return data;
+        },
+        onSuccess: (data) => {
+            console.log('Query success:', data); // Debugging line
+        }
+    })
 
-
+    if(isLoading) return <Loader/>
     return (
         <>
             <div className='container mx-auto px-4 sm:px-8'>
@@ -61,11 +69,11 @@ const ProductList = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {/* Room row data */}
+                                    {/* product row data */}
                                     {
-                                        products &&
-                                        (products.map(product => (
-                                        <ProductRow key={product._id} product={product}/>)))
+                                        (products?.map(product => (
+                                        <ProductRow key={product._id} product={product} refetch={refetch}/>
+                                    )))
                                     }
                                 </tbody>
                             </table>

@@ -6,6 +6,7 @@ import { getStoreInfo } from "../../../../api/auth";
 import { useNavigate } from 'react-router-dom'
 import toast from "react-hot-toast";
 import ProductList from "./ProductList";
+import Loader from "../../../../components/Shared/Loader";
 
 
 const ProductManagement = () => {
@@ -15,8 +16,12 @@ const ProductManagement = () => {
 
     const [productCount, setProductCount] = useState(0)
     const [productLimit, setProductLimit] = useState(null)
+    const [isLoading, setIsLoading] = useState(null)
+    
     useEffect(() => {
+        setIsLoading(true)
         totalProduct(user?.email).then(data => setProductCount(data?.count))
+        setIsLoading(false)
     }, [user?.email])
 
     useEffect(() => {
@@ -37,6 +42,7 @@ const ProductManagement = () => {
         setOpenModal(false);
     }
 
+    if(isLoading) return <Loader></Loader>
     return (
         <>
             <div className="flex justify-center items-center ">

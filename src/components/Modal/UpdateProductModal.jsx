@@ -1,64 +1,71 @@
-import { Modal } from "flowbite-react";
+import { Modal } from 'flowbite-react';
 import PropTypes from 'prop-types';
-import { useForm } from "react-hook-form"
-import { imageUpload } from "../../api/utils";
-import toast from "react-hot-toast";
-import useAuth from "../../hooks/useAuth";
-import { addProduct, reduceLimit } from "../../api/product";
-import { getStoreInfo } from "../../api/auth";
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { imageUpload } from '../../api/utils';
+import { useState } from 'react';
+import Loader from '../Shared/Loader';
+import axiosSecure from '../../api';
 
-const AddProductModal = ({ openModal, onCloseModal }) => {
+const UpdateProductModal = ({ openModal, onCloseModal, product, refetch }) => {
 
-    const {user} = useAuth();
-    const { register, handleSubmit } = useForm();
-    const onSubmit = async(formInfo) => {
+    const [isLoading, setIsLoading] = useState(false);
 
+
+
+    const { register, handleSubmit } = useForm({
+        defaultValues: {
+            name: product?.productName,
+            quantity: product?.quantity,
+            cost: product?.productCost,
+            profitMargin: product?.profitMargin,
+            location: product?.location,
+            description: product?.description,
+            discount: product?.discount,
+            // image:product?.image,
+        }
+    });
+
+    const onSubmit = async (formInfo) => {
+        setIsLoading(true)
         try {
             const image = formInfo?.image[0];
-            const imageData = await imageUpload(image);
+            let imageData = "";
+            image && (imageData = await imageUpload(image))
 
-            const storeInfo = await getStoreInfo(user?.email)
 
-            const sellingPriceCal=()=>{
-                const costWithtax = formInfo?.cost + ((formInfo?.cost * 7.5)/100);
-                const sellingPrice = (costWithtax + ((costWithtax * formInfo?.profitMargin)/100));
-                const sellingPriceWithDiscount = sellingPrice - ((sellingPrice * formInfo.discount)/100);
-                return Math.ceil(sellingPriceWithDiscount);
+            const productInfo = {
+                productName: formInfo?.name,
+                quantity: formInfo?.quantity,
+                description: formInfo?.description,
+                location: formInfo?.location,
+                productCost: formInfo?.cost,
+                profitMargin: formInfo?.profitMargin,
+                discount: formInfo?.discount,
+                image: imageData?.data?.display_url || product?.image,
             }
-    
-            const productInfo ={
-                productName : formInfo?.name,
-                quantity:formInfo?.quantity,
-                description:formInfo?.description,
-                location:formInfo?.location,
-                productCost:formInfo?.cost,
-                profitMargin:formInfo?.profitMargin,
-                discount:formInfo?.discount,
-                image:imageData?.data?.display_url,
-                shopName:storeInfo?.storeName,
-                ownerEmail:storeInfo?.ownerEmail,
-                sellingPrice:sellingPriceCal(),
-                saleCount: 0,
-            }
+            // const result = updateProduct(product?._id, productInfo);
+            const {data} = await axiosSecure.patch(`/update-product/${product?._id}`,productInfo);
+            console.log(data);
 
-            addProduct(productInfo);
-            reduceLimit(storeInfo?.ownerEmail, {limit:storeInfo?.limit})
-            toast.success('Product Added Successfuly');
+            refetch();
             onCloseModal();
-
+            setIsLoading(false);
+            toast.success('Product Updated');
         } catch (error) {
+            setIsLoading(false)
             toast.error(error.message)
         }
-
     }
+
+    if(isLoading) return <Loader></Loader>
     return (
         <>
-
             <Modal show={openModal} size="md" onClose={onCloseModal} popup>
                 <Modal.Header />
                 <Modal.Body>
                     <form onSubmit={handleSubmit(onSubmit)} className="" action="">
-                        <h2 className="text-3xl text-center mb-5 font-semibold">Add Product</h2>
+                        <h2 className="text-3xl text-center mb-5 font-semibold">Update Product</h2>
                         <div className="flex gap-5">
                             <div>
                                 <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="product-name">Product Name</label>
@@ -67,19 +74,19 @@ const AddProductModal = ({ openModal, onCloseModal }) => {
 
                             <div>
                                 <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="product-quantity">Product Quantity</label>
-                                <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full" type="number" {...register("quantity", { require: true, valueAsNumber:true})} />
+                                <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full" type="number" {...register("quantity", { require: true, valueAsNumber: true })} />
                             </div>
                         </div>
                         <div className="flex gap-5 my-3
                         ">
                             <div>
                                 <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="product-name">Production Cost</label>
-                                <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full" type="number" {...register("cost", { require: true, valueAsNumber:true})} />
+                                <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full" type="number" {...register("cost", { require: true, valueAsNumber: true })} />
                             </div>
 
                             <div>
                                 <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="product-quantity">Profit Margin(%)</label>
-                                <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full" type="number" {...register("profitMargin", { require: true, valueAsNumber:true})} />
+                                <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full" type="number" {...register("profitMargin", { require: true, valueAsNumber: true })} />
                             </div>
                         </div>
                         <div className="flex gap-5">
@@ -96,7 +103,7 @@ const AddProductModal = ({ openModal, onCloseModal }) => {
                         <div className="flex gap-5 my-3 items-center">
                             <div>
                                 <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="product-quantity">Product Discount</label>
-                                <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full" type="number" {...register("discount", { require: true, valueAsNumber:true })} />
+                                <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full" type="number" {...register("discount", { require: true, valueAsNumber: true })} />
                             </div>
                             <div>
                                 <label className="block mb-2 text-sm font-medium text-gray-900" htmlFor="product-quantity">Product Image</label>
@@ -111,13 +118,11 @@ const AddProductModal = ({ openModal, onCloseModal }) => {
             </Modal>
         </>
     );
-
-
 };
-
-AddProductModal.propTypes = {
+UpdateProductModal.propTypes = {
     openModal: PropTypes.bool,
     onCloseModal: PropTypes.func,
+    product: PropTypes.object,
+    refetch: PropTypes.func
 }
-
-export default AddProductModal;
+export default UpdateProductModal;
