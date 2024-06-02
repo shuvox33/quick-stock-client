@@ -2,7 +2,7 @@ import axiosSecure from "."
 
 export const totalProduct = async (email) =>{
     const {data} = await axiosSecure(`/total-product/${email}`);
-    return data;
+    return data.count;
 }
 
 export const addProduct = async(productInfo)=>{
@@ -10,8 +10,12 @@ export const addProduct = async(productInfo)=>{
     return data;
 }
 
-export const reduceLimit = async(email,limit)=>{
-    const {data} = await axiosSecure.patch(`/reduce-limit/${email}`, limit);
+export const reduceLimit = async(email)=>{
+    const {data} = await axiosSecure.patch(`/reduce-limit/${email}`);
+    return data;
+}
+export const increaseLimit = async(email)=>{
+    const {data} = await axiosSecure.patch(`/increase-limit/${email}`);
     return data;
 }
 export const allAddedProduct = async(email)=>{

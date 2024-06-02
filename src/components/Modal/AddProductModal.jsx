@@ -5,7 +5,8 @@ import { imageUpload } from "../../api/utils";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import { addProduct, reduceLimit } from "../../api/product";
-import { getStoreInfo } from "../../api/auth";
+import { getStoreInfo } from "../../api/store";
+
 
 const AddProductModal = ({ openModal, onCloseModal }) => {
 

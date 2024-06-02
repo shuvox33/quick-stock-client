@@ -3,15 +3,9 @@ import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { imageUpload } from '../../api/utils';
-import { useState } from 'react';
-import Loader from '../Shared/Loader';
 import axiosSecure from '../../api';
 
 const UpdateProductModal = ({ openModal, onCloseModal, product, refetch }) => {
-
-    const [isLoading, setIsLoading] = useState(false);
-
-
 
     const { register, handleSubmit } = useForm({
         defaultValues: {
@@ -27,7 +21,6 @@ const UpdateProductModal = ({ openModal, onCloseModal, product, refetch }) => {
     });
 
     const onSubmit = async (formInfo) => {
-        setIsLoading(true)
         try {
             const image = formInfo?.image[0];
             let imageData = "";
@@ -50,15 +43,13 @@ const UpdateProductModal = ({ openModal, onCloseModal, product, refetch }) => {
 
             refetch();
             onCloseModal();
-            setIsLoading(false);
             toast.success('Product Updated');
         } catch (error) {
-            setIsLoading(false)
             toast.error(error.message)
         }
     }
 
-    if(isLoading) return <Loader></Loader>
+    // if(isLoading) return <Loader></Loader>
     return (
         <>
             <Modal show={openModal} size="md" onClose={onCloseModal} popup>

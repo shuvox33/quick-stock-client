@@ -1,9 +1,10 @@
 import { TbFidgetSpinner } from "react-icons/tb";
 import useAuth from "../../hooks/useAuth";
-import { createStore, imageUpload } from "../../api/utils";
+import {imageUpload } from "../../api/utils";
 import toast from "react-hot-toast";
 import { updateRole } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
+import { createStore } from "../../api/store";
 
 const CreateStore = () => {
     const navigate = useNavigate();

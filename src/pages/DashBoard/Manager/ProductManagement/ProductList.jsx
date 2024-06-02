@@ -1,8 +1,10 @@
 import useAuth from "../../../../hooks/useAuth";
 import ProductRow from "../../../../components/TableRow/ProductRow";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Loader from '../../../../components/Shared/Loader'
 import axiosSecure from "../../../../api";
+import toast from "react-hot-toast";
+import { increaseLimit } from "../../../../api/product";
 
 const ProductList = () => {
 
@@ -19,6 +21,29 @@ const ProductList = () => {
             console.log('Query success:', data); // Debugging line
         }
     })
+
+    //delete
+    const {mutateAsync} = useMutation({
+        mutationFn: async id =>{
+            const {data} = await axiosSecure.delete(`/delete-product/${id}`);
+            const {data2} = await increaseLimit(user?.email);
+            return {data, data2}
+        },
+        onSuccess: data =>{
+            console.log(data);
+            refetch();
+            toast.success('Successfully Deleted')
+        }
+    })
+
+    //handle delete
+    const handleDelete = async id =>{
+        try {
+            await mutateAsync(id)
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     if(isLoading) return <Loader/>
     return (
@@ -72,7 +97,7 @@ const ProductList = () => {
                                     {/* product row data */}
                                     {
                                         (products?.map(product => (
-                                        <ProductRow key={product._id} product={product} refetch={refetch}/>
+                                        <ProductRow key={product._id} product={product} refetch={refetch} handleDelete={handleDelete}/>
                                     )))
                                     }
                                 </tbody>

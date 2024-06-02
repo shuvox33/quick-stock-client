@@ -43,8 +43,3 @@ export const getUserInfo = async(email)=>{
     return data;
 
 }
-export const getStoreInfo = async(email)=>{
-    const {data} = await axiosSecure.get(`/store-info/${email}`);
-    return data;
-
-}
