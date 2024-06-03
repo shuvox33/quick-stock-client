@@ -8,6 +8,7 @@ import CreateStore from '../pages/Create-Store/CreateStore'
 import PrivateRoutes from './PrivateRoutes'
 import DashBoardLayout from '../layouts/DashBoardLayout'
 import ProductManagement from '../pages/DashBoard/Manager/ProductManagement/ProductManagement'
+import SalesCollection from '../pages/DashBoard/Manager/SalesCollection/SalesCollection'
 
 
 export const router = createBrowserRouter([
@@ -29,11 +30,15 @@ export const router = createBrowserRouter([
   { path: '/login', element: <Login /> },
   { path: '/signup', element: <SignUp /> },
   {
-    path:'/dashboard',
-    element:<PrivateRoutes><DashBoardLayout></DashBoardLayout></PrivateRoutes>,
-    children:[{
-      path:'product-management',
+    path: '/dashboard',
+    element: <PrivateRoutes><DashBoardLayout></DashBoardLayout></PrivateRoutes>,
+    children: [{
+      path: 'product-management',
       element: <PrivateRoutes><ProductManagement></ProductManagement></PrivateRoutes>
+    },
+    {
+      path: 'product-section',
+      element:<SalesCollection></SalesCollection>
     }]
   }
 ])
