@@ -1,14 +1,15 @@
 import useAuth from "../../../../hooks/useAuth";
 import ProductRow from "../../../../components/TableRow/ProductRow";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Loader from '../../../../components/Shared/Loader'
 import axiosSecure from "../../../../api";
 import toast from "react-hot-toast";
-import { increaseLimit } from "../../../../api/product";
+import { increaseLimit } from "../../../../api/store";
 
 const ProductList = () => {
 
     const { user } = useAuth();
+    const queryClient = useQueryClient();
 
     const {data:products=[], isLoading, refetch} = useQuery({
         queryKey:['product-list', user?.email],
@@ -29,9 +30,9 @@ const ProductList = () => {
             const {data2} = await increaseLimit(user?.email);
             return {data, data2}
         },
-        onSuccess: data =>{
-            console.log(data);
-            refetch();
+        onSuccess: () =>{
+            queryClient.invalidateQueries(['product-list', 'productLimit','totalProduct'])
+            // refetch();
             toast.success('Successfully Deleted')
         }
     })

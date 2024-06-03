@@ -27,7 +27,7 @@ const CreateStore = () => {
 
             const storeInfo ={
                 storeName,
-                logo : logoData?.data?.display_url,
+                logo : logoData,
                 description,
                 location,
                 ownerName,

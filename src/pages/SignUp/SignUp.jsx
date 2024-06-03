@@ -28,7 +28,7 @@ const SignUp = () => {
       console.log(result);
 
       // update profile 
-      await updateUserProfile(name, imageData?.data?.display_url)
+      await updateUserProfile(name, imageData)
 
       // save user
       const dbResponse = await saveUser(result?.user?.email);

@@ -10,14 +10,6 @@ export const addProduct = async(productInfo)=>{
     return data;
 }
 
-export const reduceLimit = async(email)=>{
-    const {data} = await axiosSecure.patch(`/reduce-limit/${email}`);
-    return data;
-}
-export const increaseLimit = async(email)=>{
-    const {data} = await axiosSecure.patch(`/increase-limit/${email}`);
-    return data;
-}
 export const allAddedProduct = async(email)=>{
     const {data} = await axiosSecure.get(`/added-product/${email}`);
     return data;

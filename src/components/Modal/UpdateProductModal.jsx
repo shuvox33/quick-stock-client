@@ -35,7 +35,7 @@ const UpdateProductModal = ({ openModal, onCloseModal, product, refetch }) => {
                 productCost: formInfo?.cost,
                 profitMargin: formInfo?.profitMargin,
                 discount: formInfo?.discount,
-                image: imageData?.data?.display_url || product?.image,
+                image: imageData || product?.image,
             }
             // const result = updateProduct(product?._id, productInfo);
             const {data} = await axiosSecure.patch(`/update-product/${product?._id}`,productInfo);

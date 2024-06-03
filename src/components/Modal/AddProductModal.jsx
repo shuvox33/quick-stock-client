@@ -4,14 +4,36 @@ import { useForm } from "react-hook-form"
 import { imageUpload } from "../../api/utils";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
-import { addProduct, reduceLimit } from "../../api/product";
-import { getStoreInfo } from "../../api/store";
+import { addProduct } from "../../api/product";
+import { getStoreInfo, reduceLimit } from "../../api/store";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 const AddProductModal = ({ openModal, onCloseModal }) => {
 
     const {user} = useAuth();
     const { register, handleSubmit } = useForm();
+
+    const queryClient = useQueryClient();
+
+    const deleteAndUpdate = async ({productInfo}) =>{
+        await Promise.all([
+            addProduct(productInfo),
+            reduceLimit(productInfo?.ownerEmail)
+        ])
+    }
+    const mutation = useMutation({
+        mutationFn: deleteAndUpdate,
+        onSuccess:()=>{
+            queryClient.invalidateQueries(['product-list', 'productLimit','totalProduct'])
+            toast.success('Product Added Successfuly');
+        },
+        onError: (error) =>{
+            toast.error('An Error Occurred: ' + error.message)
+        }   
+
+    })
+
     const onSubmit = async(formInfo) => {
 
         try {
@@ -35,16 +57,16 @@ const AddProductModal = ({ openModal, onCloseModal }) => {
                 productCost:formInfo?.cost,
                 profitMargin:formInfo?.profitMargin,
                 discount:formInfo?.discount,
-                image:imageData?.data?.display_url,
+                image:imageData,
                 shopName:storeInfo?.storeName,
                 ownerEmail:storeInfo?.ownerEmail,
                 sellingPrice:sellingPriceCal(),
                 saleCount: 0,
             }
 
-            addProduct(productInfo);
-            reduceLimit(storeInfo?.ownerEmail, {limit:storeInfo?.limit})
-            toast.success('Product Added Successfuly');
+            await mutation.mutateAsync({productInfo})
+            // addProduct(productInfo);
+            // reduceLimit(storeInfo?.ownerEmail, {limit:storeInfo?.limit})
             onCloseModal();
 
         } catch (error) {
