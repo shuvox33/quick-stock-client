@@ -18,7 +18,7 @@ const SalesCollection = () => {
             <div >
                 <form onSubmit={handleSearch} onChange={(e) => setSearchQuery(e.target.value)} className="flex w-full max-w-sm items-center mx-auto space-x-2" action="">
                     <Input name="searchValue" type="text" placeholder="Product Name" />
-                    <Button onSubmit={handleSearch} type="submit">Subscribe</Button>
+                    <Button onSubmit={handleSearch} type="submit">Search</Button>
                 </form>
             </div>
 
