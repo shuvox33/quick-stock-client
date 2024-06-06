@@ -3,9 +3,9 @@ import Loader from "@/components/Shared/Loader";
 import SalesProductRow from "@/components/TableRow/SalesProductRow";
 import useAuth from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
+import PropTypes from 'prop-types';
 
-
-const SalesProductList = () => {
+const SalesProductList = ({searchQuery}) => {
     const { user } = useAuth()
 
     const { data: products, isLoading } = useQuery({
@@ -15,6 +15,10 @@ const SalesProductList = () => {
             return data;
         }
     })
+
+    const filteredProducts = searchQuery ? 
+    products.filter(product => product.productName.toLowerCase().includes(searchQuery.toLowerCase()))
+    : products;
 
     if (isLoading) return <Loader></Loader>
     return (
@@ -66,7 +70,7 @@ const SalesProductList = () => {
                             <tbody>
                                 {/* product row data */}
                                 {
-                                    (products?.map(product => (
+                                    (filteredProducts?.map(product => (
                                         <SalesProductRow key={product._id} product={product} />
                                     )))
                                 }
@@ -78,5 +82,7 @@ const SalesProductList = () => {
         </div>
     )
 };
-
+SalesProductList.propTypes = {
+    searchQuery: PropTypes.string,
+}
 export default SalesProductList;
