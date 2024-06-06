@@ -1,26 +1,26 @@
-import axiosSecure from "@/api";
-import Loader from "@/components/Shared/Loader";
-import SalesProductRow from "@/components/TableRow/SalesProductRow";
-import useAuth from "@/hooks/useAuth";
-import { useQuery } from "@tanstack/react-query";
-import PropTypes from 'prop-types';
+import CheckOutRow from "@/components/TableRow/CheckOutRow";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
-const SalesProductList = ({searchQuery, setAddedProduct}) => {
-    const { user } = useAuth()
+const CheckOutList = () => {
+    const navigate = useNavigate();
 
-    const { data: products, isLoading } = useQuery({
-        queryKey: ['sales-products'],
-        queryFn: async () => {
-            const { data } = await axiosSecure.get(`/added-product/${user?.email}`)
-            return data;
-        }
-    })
+    const [addedProducts, setAddedProducts] = useState(() => {
+        const savedProducts = localStorage.getItem("addedProduct");
+        return savedProducts ? JSON.parse(savedProducts) : [];
+    });
 
-    const filteredProducts = searchQuery ? 
-    products.filter(product => product.productName.toLowerCase().includes(searchQuery.toLowerCase()))
-    : products;
+    const handleClear = () => {
+        localStorage.removeItem('addedProduct');
+        setAddedProducts([]);
+    }
+    // const addedProducts = JSON.parse(localStoreProduct);
+    // console.log(addedProducts);
 
-    if (isLoading) return <Loader></Loader>
+    if (addedProducts.length < 1) {
+        return<h2 className="text-center text-2xl">No Product Added</h2>
+    }
     return (
         <div className='container mx-auto px-4 sm:px-8'>
             <div className='py-8'>
@@ -45,33 +45,33 @@ const SalesProductList = ({searchQuery, setAddedProduct}) => {
                                         scope='col'
                                         className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
                                     >
+                                        Price
+                                    </th>
+                                    <th
+                                        scope='col'
+                                        className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
+                                    >
                                         Quantity
                                     </th>
                                     <th
                                         scope='col'
                                         className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
                                     >
-                                        Discount
+                                        Total Price
                                     </th>
                                     <th
                                         scope='col'
                                         className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
                                     >
-                                        Selling Price
-                                    </th>
-                                    <th
-                                        scope='col'
-                                        className='px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal'
-                                    >
-                                        Add For Checkout
+                                        Remove
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {/* product row data */}
                                 {
-                                    (filteredProducts?.map(product => (
-                                        <SalesProductRow setAddedProduct={setAddedProduct} key={product._id} product={product} />
+                                    (addedProducts?.map(product => (
+                                        <CheckOutRow key={product._id} product={product} />
                                     )))
                                 }
                             </tbody>
@@ -79,11 +79,12 @@ const SalesProductList = ({searchQuery, setAddedProduct}) => {
                     </div>
                 </div>
             </div>
+            <div className="flex justify-between">
+                <Button onClick={() => navigate(-1)}>Continue Shoping</Button>
+                <Button onClick={handleClear}>Clear Cart</Button>
+            </div>
         </div>
-    )
+    );
 };
-SalesProductList.propTypes = {
-    searchQuery: PropTypes.string,
-    setAddedProduct:PropTypes.func
-}
-export default SalesProductList;
+
+export default CheckOutList;

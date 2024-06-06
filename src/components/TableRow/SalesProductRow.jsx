@@ -1,6 +1,20 @@
 
 import PropTypes from 'prop-types';
-const SalesProductRow = ({product}) => {
+import toast from 'react-hot-toast';
+const SalesProductRow = ({product, setAddedProduct}) => {
+
+    const handleAddProduct= () =>{
+        setAddedProduct(prev=>{
+            const temp = [...prev];
+            const exist = temp.some(tempPro=>tempPro._id === product._id)
+            if(exist) {
+                toast.error("product already exist")
+                return [...prev];
+            }
+            return [...prev, product]
+        })
+    }
+
     return (
         <tr>
         <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
@@ -30,7 +44,7 @@ const SalesProductRow = ({product}) => {
         </td>
         <td className='px-5 py-5 border-b  border-gray-200 bg-white text-sm'>
             <button
-                onClick={() => setOpenDeleteModal(true)}
+                onClick={handleAddProduct}
                 className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'
             >
                 <span
@@ -46,5 +60,6 @@ const SalesProductRow = ({product}) => {
 };
 SalesProductRow.propTypes = {
     product: PropTypes.object,
+    setAddedProduct:PropTypes.func
 }
 export default SalesProductRow;

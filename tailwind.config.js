@@ -77,7 +77,7 @@ export default {
     },
   },
   plugins: [
-    require('tailwindcss-animate'),
+    require('tailwindcss-animate'),require('daisyui'),
     flowbite,
   ],
 }
