@@ -1,6 +1,25 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
-const CheckOutRow = ({product}) => {
+const CheckOutRow = ({product, addedProducts ,setAddedProducts}) => {
+    const handleRemoveProduct = () =>{
+        const updatedProducts = addedProducts.filter(pro=>pro._id !== product._id)
+        setAddedProducts(updatedProducts)
+        toast.success("Product removed ")
+    }
+
+    const [quantity, setQuantity] = useState(1)
+    const handleIncrease =()=>{
+        if(1+quantity > product.quantity) return toast.error("Quatity limit over")
+            setQuantity(prevQuantity=>prevQuantity + 1);
+        console.log(quantity);
+    }
+    const handleDecrease =()=>{
+        if(quantity-1 < 1) return toast.error("Minimum limit over")
+            setQuantity(prevQuantity=> prevQuantity -1);
+    }
+
     return (
         <tr>
             <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
@@ -23,13 +42,14 @@ const CheckOutRow = ({product}) => {
                 <p className='text-gray-900 whitespace-no-wrap'>{product?.sellingPrice}</p>
             </td>
             <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-                <p className='text-gray-900 whitespace-no-wrap '>{product?.quantity}</p>
+                <p className='text-gray-900 whitespace-no-wrap '><button onClick={handleIncrease} className='p-3 text-xl'>+</button>{quantity}<button onClick={handleDecrease} className='p-3 text-xl'>-</button></p>
             </td>
             <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-                <p className='text-gray-900 whitespace-no-wrap '>{product?.price}</p>
+                <p className='text-gray-900 whitespace-no-wrap '>{product?.sellingPrice * quantity}</p>
             </td>
             <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
                 <button
+                    onClick={handleRemoveProduct}
                     className='relative cursor-pointer inline-block px-3 py-1 font-semibold text-green-900 leading-tight'
                 >
                     <span
@@ -44,7 +64,7 @@ const CheckOutRow = ({product}) => {
 };
 CheckOutRow.propTypes = {
     product: PropTypes.object,
-    refetch: PropTypes.func,
-    handleDelete: PropTypes.func
+    addedProducts: PropTypes.array,
+    setAddedProducts: PropTypes.func
 }
 export default CheckOutRow;

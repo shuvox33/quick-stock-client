@@ -1,6 +1,6 @@
 import CheckOutRow from "@/components/TableRow/CheckOutRow";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 const CheckOutList = () => {
@@ -11,6 +11,10 @@ const CheckOutList = () => {
         return savedProducts ? JSON.parse(savedProducts) : [];
     });
 
+    useEffect(() => {
+        localStorage.setItem("addedProduct", JSON.stringify(addedProducts));
+    }, [addedProducts])
+
     const handleClear = () => {
         localStorage.removeItem('addedProduct');
         setAddedProducts([]);
@@ -19,7 +23,7 @@ const CheckOutList = () => {
     // console.log(addedProducts);
 
     if (addedProducts.length < 1) {
-        return<h2 className="text-center text-2xl">No Product Added</h2>
+        return <h2 className="text-center text-2xl">No Product Added</h2>
     }
     return (
         <div className='container mx-auto px-4 sm:px-8'>
@@ -71,7 +75,7 @@ const CheckOutList = () => {
                                 {/* product row data */}
                                 {
                                     (addedProducts?.map(product => (
-                                        <CheckOutRow key={product._id} product={product} />
+                                        <CheckOutRow addedProducts={addedProducts} setAddedProducts={setAddedProducts} key={product._id} product={product} />
                                     )))
                                 }
                             </tbody>
@@ -80,8 +84,11 @@ const CheckOutList = () => {
                 </div>
             </div>
             <div className="flex justify-between">
-                <Button onClick={() => navigate(-1)}>Continue Shoping</Button>
-                <Button onClick={handleClear}>Clear Cart</Button>
+                <div className="flex flex-row gap-3">
+                    <Button onClick={() => navigate(-1)}>Continue Shoping</Button>
+                    <Button onClick={handleClear}>Clear Cart</Button>
+                </div>
+                <Button className='bg-red-400'>Check-Out</Button>
             </div>
         </div>
     );
