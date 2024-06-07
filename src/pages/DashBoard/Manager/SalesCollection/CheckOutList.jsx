@@ -1,15 +1,23 @@
+
 import CheckOutRow from "@/components/TableRow/CheckOutRow";
 import { Button } from "@/components/ui/button";
+import useUpdateProductAndSales from "@/hooks/useUpdateProductAndSales";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 const CheckOutList = () => {
+
     const navigate = useNavigate();
 
     const [addedProducts, setAddedProducts] = useState(() => {
         const savedProducts = localStorage.getItem("addedProduct");
         return savedProducts ? JSON.parse(savedProducts) : [];
     });
+
+    const[checkOutProduct, setCheckOutProduct] = useState(()=>{
+        const savedProduct = localStorage.getItem("addedProduct");
+        return savedProduct ? JSON.parse(savedProduct) : [];
+    })
 
     useEffect(() => {
         localStorage.setItem("addedProduct", JSON.stringify(addedProducts));
@@ -19,8 +27,15 @@ const CheckOutList = () => {
         localStorage.removeItem('addedProduct');
         setAddedProducts([]);
     }
-    // const addedProducts = JSON.parse(localStoreProduct);
-    // console.log(addedProducts);
+
+    const mutation = useUpdateProductAndSales();
+    const handleCheckOut = async ()=>{
+        try {
+            await mutation.mutateAsync(checkOutProduct)
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     if (addedProducts.length < 1) {
         return <h2 className="text-center text-2xl">No Product Added</h2>
@@ -75,7 +90,7 @@ const CheckOutList = () => {
                                 {/* product row data */}
                                 {
                                     (addedProducts?.map(product => (
-                                        <CheckOutRow addedProducts={addedProducts} setAddedProducts={setAddedProducts} key={product._id} product={product} />
+                                        <CheckOutRow addedProducts={addedProducts} setAddedProducts={setAddedProducts} key={product._id} product={product} setCheckOutProduct={setCheckOutProduct}/>
                                     )))
                                 }
                             </tbody>
@@ -88,7 +103,7 @@ const CheckOutList = () => {
                     <Button onClick={() => navigate(-1)}>Continue Shoping</Button>
                     <Button onClick={handleClear}>Clear Cart</Button>
                 </div>
-                <Button className='bg-red-400'>Check-Out</Button>
+                <Button onClick={handleCheckOut} className='bg-red-400'>Check-Out</Button>
             </div>
         </div>
     );

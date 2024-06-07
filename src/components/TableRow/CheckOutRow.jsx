@@ -2,22 +2,36 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-const CheckOutRow = ({product, addedProducts ,setAddedProducts}) => {
-    const handleRemoveProduct = () =>{
-        const updatedProducts = addedProducts.filter(pro=>pro._id !== product._id)
+const CheckOutRow = ({ product, addedProducts, setAddedProducts, setCheckOutProduct }) => {
+    const handleRemoveProduct = () => {
+        const updatedProducts = addedProducts.filter(pro => pro._id !== product._id)
         setAddedProducts(updatedProducts)
         toast.success("Product removed ")
     }
 
-    const [quantity, setQuantity] = useState(1)
-    const handleIncrease =()=>{
-        if(1+quantity > product.quantity) return toast.error("Quatity limit over")
-            setQuantity(prevQuantity=>prevQuantity + 1);
-        console.log(quantity);
+    const [quantity, setQuantity] = useState(product?.quantity)
+
+    const handleIncrease = () => {
+        if (1 + quantity > product.quantity) return toast.error("Quatity limit over")
+        setQuantity(prevQuantity => prevQuantity + 1);
+
+        setCheckOutProduct(prevProducts => {
+            return prevProducts.map(prevProduct => {
+                return product?._id === prevProduct?._id ? { ...prevProduct,saleCoutn: 1+quantity, quantity: product?.quantity-quantity + 1} : prevProduct
+            })
+        })
     }
-    const handleDecrease =()=>{
-        if(quantity-1 < 1) return toast.error("Minimum limit over")
-            setQuantity(prevQuantity=> prevQuantity -1);
+    const handleDecrease = () => {
+        if (quantity - 1 < 1) return toast.error("Minimum limit over")
+        setQuantity(prevQuantity => (prevQuantity - 1));
+
+        setCheckOutProduct(prevProducts => {
+            return prevProducts.map(prevProduct => {
+                return prevProduct?._id === product?._id ? { ...prevProduct, saleCoutn: quantity-1, quantity: product?.quantity-quantity-1 } : prevProduct
+            })
+        })
+
+        // setCheckOutProduct(prevProducts => prevProducts.map(prevProduct => product?._id === prevProduct?._id ? { ...product, quantity: quantity } : product))
     }
 
     return (
@@ -65,6 +79,7 @@ const CheckOutRow = ({product, addedProducts ,setAddedProducts}) => {
 CheckOutRow.propTypes = {
     product: PropTypes.object,
     addedProducts: PropTypes.array,
-    setAddedProducts: PropTypes.func
+    setAddedProducts: PropTypes.func,
+    setCheckOutProduct: PropTypes.func
 }
 export default CheckOutRow;

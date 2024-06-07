@@ -16,6 +16,6 @@ export const allAddedProduct = async(email)=>{
 }
 
 export const updateProduct = async(id, product)=>{
-    const {data} = await axiosSecure.patch(`/update-product/${id}`,product);
+    const {data} = await axiosSecure.put(`/update-product/${id}`,product);
     return data;
 }
