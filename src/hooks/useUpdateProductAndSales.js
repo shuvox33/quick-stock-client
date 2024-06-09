@@ -5,13 +5,15 @@ import toast from "react-hot-toast";
 
 const useUpdateProductAndSales = () => {
     return useMutation({
-        mutationFn: async (products) => {
-
-            console.log(products);
+    mutationFn: async (products) => {
 
             const updatePromis = products.map(async (product) => {
+                const salesHistry = {
+                    name: product?.productName,
+                    profit:(product?.saleCount - product?.prevSales) * (product?.sellingPrice - product?.productCost)
+                }
                 await updateProduct(product?._id, product);
-                await addSalesRecord( product);
+                await addSalesRecord( salesHistry);
             });
             await Promise.all(updatePromis);
         },

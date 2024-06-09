@@ -17,7 +17,7 @@ const CheckOutRow = ({ product, addedProducts, setAddedProducts, checkOutProduct
     useEffect(() => {
         setCheckOutProduct(prevProducts => {
             return prevProducts.map(prevProduct => {
-                return product?._id === prevProduct?._id ? { ...prevProduct, saleCount: product?.saleCount + quantity, quantity: product?.quantity - quantity } : prevProduct
+                return product?._id === prevProduct?._id ? { ...prevProduct, prevSales:product?.saleCount, saleCount: product?.saleCount + quantity, quantity: product?.quantity - quantity } : prevProduct
             })
         })
     }, [])
@@ -31,7 +31,7 @@ const CheckOutRow = ({ product, addedProducts, setAddedProducts, checkOutProduct
                 if (product?._id === prevProduct?._id) {
                     const updatedSaleCount = product?.saleCount + (quantity + 1); // Use quantity + 1 since it's the intended increment
                     const updatedQuantity = product?.quantity - (quantity + 1); // Subtract (quantity + 1) from product quantity
-                    return { ...prevProduct, saleCount: updatedSaleCount, quantity: updatedQuantity };
+                    return { ...prevProduct,prevSales:product?.saleCount, saleCount: updatedSaleCount, quantity: updatedQuantity };
                 }
                 return prevProduct;
             });
@@ -43,11 +43,10 @@ const CheckOutRow = ({ product, addedProducts, setAddedProducts, checkOutProduct
 
         setCheckOutProduct(prevProducts => {
             return prevProducts.map(prevProduct => {
-                console.log(quantity);
                 if (product?._id === prevProduct?._id) {
                     const updatedSaleCount = product?.saleCount + (quantity - 1); 
                     const updatedQuantity = product?.quantity - (quantity - 1); 
-                    return { ...prevProduct, saleCount: updatedSaleCount, quantity: updatedQuantity };
+                    return { ...prevProduct, prevSales:product?.saleCount, saleCount: updatedSaleCount, quantity: updatedQuantity };
                 }
                 return prevProduct;
             });

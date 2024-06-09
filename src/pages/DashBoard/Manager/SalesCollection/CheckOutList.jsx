@@ -14,7 +14,7 @@ const CheckOutList = () => {
         return savedProducts ? JSON.parse(savedProducts) : [];
     });
 
-    const[checkOutProduct, setCheckOutProduct] = useState(()=>{
+    const [checkOutProduct, setCheckOutProduct] = useState(() => {
         const savedProduct = localStorage.getItem("addedProduct");
         return savedProduct ? JSON.parse(savedProduct) : [];
     })
@@ -29,12 +29,15 @@ const CheckOutList = () => {
     }
 
     const mutation = useUpdateProductAndSales();
-    const handleCheckOut = async ()=>{
+    const handleCheckOut = async () => {
         try {
+
             await mutation.mutateAsync(checkOutProduct)
             setAddedProducts([]);
         } catch (error) {
             console.error(error);
+            setAddedProducts([]);
+
         }
     }
 
@@ -91,7 +94,7 @@ const CheckOutList = () => {
                                 {/* product row data */}
                                 {
                                     (addedProducts?.map(product => (
-                                        <CheckOutRow addedProducts={addedProducts} setAddedProducts={setAddedProducts} key={product._id} product={product} checkOutProduct={checkOutProduct} setCheckOutProduct={setCheckOutProduct}/>
+                                        <CheckOutRow addedProducts={addedProducts} setAddedProducts={setAddedProducts} key={product._id} product={product} checkOutProduct={checkOutProduct} setCheckOutProduct={setCheckOutProduct} />
                                     )))
                                 }
                             </tbody>

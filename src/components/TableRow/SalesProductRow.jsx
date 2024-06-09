@@ -8,7 +8,10 @@ const SalesProductRow = ({product, setAddedProduct}) => {
             const temp = [...prev];
             const exist = temp.some(tempPro=>tempPro._id === product._id)
 
-            if(product.quantity < 1) return toast.error("No product availabe")
+            if(product.quantity < 1){
+                toast.error("No product availabe")
+                return [...prev] 
+            } 
             if(exist) {
                 toast.error("product already exist")
                 return [...prev];
