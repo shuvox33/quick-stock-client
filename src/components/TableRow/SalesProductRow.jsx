@@ -40,10 +40,10 @@ const SalesProductRow = ({product, setAddedProduct}) => {
             <p className='text-gray-900 whitespace-no-wrap'>{product?.quantity}</p>
         </td>
         <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-            <p className='text-gray-900 whitespace-no-wrap '>{product?.sellingPrice}</p>
+            <p className='text-gray-900 whitespace-no-wrap '>{product?.discount}</p>
         </td>
         <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-            <p className='text-gray-900 whitespace-no-wrap '>{product?.discount}</p>
+            <p className='text-gray-900 whitespace-no-wrap '>{product?.sellingPrice}</p>
         </td>
         <td className='px-5 py-5 border-b  border-gray-200 bg-white text-sm'>
             <button

@@ -50,7 +50,7 @@ const SalesCollection = () => {
                         </div>
                         <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
                             <div className="card-body">
-                                <span className="font-bold text-lg text-white">{addedProduct.length} Items</span>
+                                <span className="font-bold text-lg text-black">{addedProduct.length} Items</span>
                                 <div className="card-actions">
                                         <button onClick={handleCheckOut} className="btn btn-primary btn-block">View cart</button>
                                 </div>

@@ -32,6 +32,7 @@ const CheckOutList = () => {
     const handleCheckOut = async ()=>{
         try {
             await mutation.mutateAsync(checkOutProduct)
+            setAddedProducts([]);
         } catch (error) {
             console.error(error);
         }
@@ -90,7 +91,7 @@ const CheckOutList = () => {
                                 {/* product row data */}
                                 {
                                     (addedProducts?.map(product => (
-                                        <CheckOutRow addedProducts={addedProducts} setAddedProducts={setAddedProducts} key={product._id} product={product} setCheckOutProduct={setCheckOutProduct}/>
+                                        <CheckOutRow addedProducts={addedProducts} setAddedProducts={setAddedProducts} key={product._id} product={product} checkOutProduct={checkOutProduct} setCheckOutProduct={setCheckOutProduct}/>
                                     )))
                                 }
                             </tbody>

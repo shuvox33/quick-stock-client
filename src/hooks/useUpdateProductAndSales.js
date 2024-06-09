@@ -6,6 +6,9 @@ import toast from "react-hot-toast";
 const useUpdateProductAndSales = () => {
     return useMutation({
         mutationFn: async (products) => {
+
+            console.log(products);
+
             const updatePromis = products.map(async (product) => {
                 await updateProduct(product?._id, product);
                 await addSalesRecord( product);

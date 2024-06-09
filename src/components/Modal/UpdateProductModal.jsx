@@ -38,7 +38,7 @@ const UpdateProductModal = ({ openModal, onCloseModal, product, refetch }) => {
                 image: imageData || product?.image,
             }
             // const result = updateProduct(product?._id, productInfo);
-            const {data} = await axiosSecure.patch(`/update-product/${product?._id}`,productInfo);
+            const {data} = await axiosSecure.put(`/update-product/${product?._id}`,productInfo);
             console.log(data);
 
             refetch();
