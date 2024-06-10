@@ -9,6 +9,7 @@ const CheckOutList = () => {
 
     const navigate = useNavigate();
 
+
     const [addedProducts, setAddedProducts] = useState(() => {
         const savedProducts = localStorage.getItem("addedProduct");
         return savedProducts ? JSON.parse(savedProducts) : [];
@@ -34,6 +35,8 @@ const CheckOutList = () => {
 
             await mutation.mutateAsync(checkOutProduct)
             setAddedProducts([]);
+            navigate(-1)
+
         } catch (error) {
             console.error(error);
             setAddedProducts([]);

@@ -22,6 +22,7 @@
     "date-fns": "^2.30.0",
     "firebase": "^10.6.0",
     "flowbite-react": "^0.9.0",
+    "jspdf": "^2.5.1",
     "lucide-react": "^0.383.0",
     "prop-types": "^15.8.1",
     "query-string": "^8.1.0",
