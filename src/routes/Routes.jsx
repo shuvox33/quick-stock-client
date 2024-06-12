@@ -10,6 +10,7 @@ import DashBoardLayout from '../layouts/DashBoardLayout'
 import ProductManagement from '../pages/DashBoard/Manager/ProductManagement/ProductManagement'
 import SalesCollection from '../pages/DashBoard/Manager/SalesCollection/SalesCollection'
 import CheckOutList from '@/pages/DashBoard/Manager/SalesCollection/CheckOutList'
+import Subscription from '@/pages/DashBoard/Manager/Subscription/Subscription'
 
 
 export const router = createBrowserRouter([
@@ -44,7 +45,12 @@ export const router = createBrowserRouter([
     {
       path: 'product-section/check-out',
       element: <CheckOutList></CheckOutList>
-    }]
+    },
+    {
+      path: 'subscription',
+      element: <Subscription></Subscription>
+    },
+  ]
   }
 ])
 
