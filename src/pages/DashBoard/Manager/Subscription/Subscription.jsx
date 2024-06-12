@@ -1,4 +1,4 @@
-import useAuth from "@/hooks/useAuth";
+
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckOutForm from "@/components/Form/CheckOutForm";
@@ -7,51 +7,41 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 
 const Subscription = () => {
-    const { user } = useAuth();
-    console.log(user?.email);
 
-    const handleFirstPack = () => {
-        setOpenModal(true)
-    }
-    const handleSecondPack = () => {
-        setOpenModal(true)
-
-    }
-    const handleThirdPack = () => {
-        setOpenModal(true)
-
-    }
     const [openModal, setOpenModal] = useState(false);
+    const [selectedPack, setSelectedPack] = useState(null);
+
+    const handlePack = (pack) => {
+        setSelectedPack(pack)
+        setOpenModal(true)
+    }
+
+
+    const packages = [
+        { id: 1, title: "Make product Limit to 200", description: "You have to pay 10 dollars to increase the limit to 200", limit: 200, price: 10 },
+        { id: 2, title: "Make product Limit to 450", description: "You have to pay 20 dollars to increase the limit to 450", limit: 450, price: 20 },
+        { id: 3, title: "Make product Limit to 1500", description: "You have to pay 50 dollars to increase the limit to 1500", limit: 1500, price: 50 },
+    ];
 
     return (
         <div className="flex gap-x-5 min-h-screen items-center justify-center">
-            <div className="card w-80 bg-base-100 shadow-xl">
-                <div className="card-body">
-                    <h2 className="card-title">Make product Limit to 200</h2>
-                    <p> You hava to pay 10 dollars to increase the limit to 200</p>
-                    <div className="card-actions justify-end">
-                        <button onClick={handleFirstPack} className="btn btn-primary">Subscribe</button>
+
+            {packages.map((pack, index) => (
+                <div key={index} className="max-w-[350px] space-y-6 rounded-lg border-b-2 border-l border-r-2 border-t border-b-[#0084ff] border-l-[#005eb6] border-r-[#0084ff] border-t-[#005eb6] bg-white py-8 pl-8 shadow-md dark:bg-[#18181B]">
+                    <div className="flex items-center justify-between">
+                        <h1 className="w-[35%] text-2xl font-bold tracking-wider text-sky-900 dark:text-[#289DFF] md:text-4xl"><sup className="text-2xl font-black">$</sup>{pack?.price}<sub className="text-sm tracking-tight">/mo</sub></h1>
+                        <div className=" w-[65%] rounded-bl-full rounded-tl-full bg-gradient-to-r  from-[#52b7ff] to-[#0084ff] px-4 py-4 md:px-10 md:py-5">
+                            <h3 className="font-semibold tracking-wider text-white md:text-xl">STANDARD</h3>
+                        </div>
+                    </div>
+                    <p className="font-semibold text-sky-900 dark:text-[#4BB3FF]/90">{pack?.description}</p>
+
+                    <div className="mr-8">
+                        <button onClick={() => handlePack(pack)} className="w-full rounded-full bg-gradient-to-r from-[#52b7ff] to-[#0084ff] py-4 text-lg font-semibold uppercase tracking-wider text-white">get started</button>
                     </div>
                 </div>
-            </div>
-            <div className="card w-80 bg-base-100 shadow-xl">
-                <div className="card-body">
-                    <h2 className="card-title">Make product Limit to 450</h2>
-                    <p> You hava to pay 20 dollars to increase the limit to 450</p>
-                    <div className="card-actions justify-end">
-                        <button onClick={handleSecondPack} className="btn btn-primary">Subscribe</button>
-                    </div>
-                </div>
-            </div>
-            <div className="card w-80 bg-base-100 shadow-xl">
-                <div className="card-body">
-                    <h2 className="card-title">Make product Limit to 1500</h2>
-                    <p> You hava to pay 50 dollars to increase the limit to 1500</p>
-                    <div className="card-actions justify-end">
-                        <button onClick={handleThirdPack} className="btn btn-primary">Subscribe</button>
-                    </div>
-                </div>
-            </div>
+            ))}
+
 
 
             <div>
@@ -61,7 +51,7 @@ const Subscription = () => {
                         <h1 className="mb-2 text-2xl font-semibold">Welcome to NavigateUI!</h1>
                         <p className="px-1 mb-3 text-sm opacity-80">Elevate your React projects with beautifully crafted components designed for TailwindCSS.</p>
                         <Elements stripe={stripePromise}>
-                            <CheckOutForm></CheckOutForm>
+                            <CheckOutForm selectedPack={selectedPack} ></CheckOutForm>
                         </Elements>
                     </div>
                 </div>
