@@ -6,6 +6,7 @@ import axiosSecure from '@/api';
 import useAuth from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { subscriptionLimit } from '@/api/store';
 
 
 const CheckoutForm = ({ selectedPack, setOpenModal }) => {
@@ -99,7 +100,9 @@ const CheckoutForm = ({ selectedPack, setOpenModal }) => {
             }
             console.log(paymentInfo);
             try {
+                console.log(selectedPack?.limit);
                 await axiosSecure.post('/subscription', paymentInfo)
+                subscriptionLimit(user?.email, selectedPack?.limit)
                 setOpenModal(false)
                 navigate('/dashboard')
                 toast.success('payment successful')

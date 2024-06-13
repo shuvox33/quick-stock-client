@@ -27,3 +27,9 @@ export const increaseLimit = async(email)=>{
     const {data} = await axiosSecure.patch(`/increase-limit/${email}`);
     return data;
 }
+
+export const subscriptionLimit = async (email, limit)=>{
+    console.log(limit);
+    const {data} = await axiosSecure.patch(`/apply-subscription/${email}`, {limit})
+    return data;
+}
