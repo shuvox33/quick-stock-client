@@ -4,12 +4,16 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import PropTypes from 'prop-types';
 import axiosSecure from '@/api';
 import useAuth from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 
-const CheckoutForm = ({ selectedPack }) => {
+const CheckoutForm = ({ selectedPack, setOpenModal }) => {
     const stripe = useStripe();
     const elements = useElements();
     const {user} = useAuth();
+
+    const navigate = useNavigate();
 
     const [clientSecret, setClientSecret] = useState();
     const [error, setError] = useState('');
@@ -94,7 +98,15 @@ const CheckoutForm = ({ selectedPack }) => {
                 date: new Date(),
             }
             console.log(paymentInfo);
-            
+            try {
+                await axiosSecure.post('/subscription', paymentInfo)
+                setOpenModal(false)
+                navigate('/dashboard')
+                toast.success('payment successful')
+
+            } catch (error) {
+                console.log(error.message);
+            }
         }
 
         setPrecessing(false)
@@ -130,6 +142,7 @@ const CheckoutForm = ({ selectedPack }) => {
 
 
 CheckoutForm.propTypes = {
-    selectedPack: PropTypes.object
+    selectedPack: PropTypes.object,
+    setOpenModal: PropTypes.object
 }
 export default CheckoutForm;

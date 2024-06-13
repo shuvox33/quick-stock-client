@@ -51,7 +51,7 @@ const Subscription = () => {
                         <h1 className="mb-2 text-2xl font-semibold">Welcome to NavigateUI!</h1>
                         <p className="px-1 mb-3 text-sm opacity-80">Elevate your React projects with beautifully crafted components designed for TailwindCSS.</p>
                         <Elements stripe={stripePromise}>
-                            <CheckOutForm selectedPack={selectedPack} ></CheckOutForm>
+                            <CheckOutForm setOpenModal={setOpenModal} selectedPack={selectedPack} ></CheckOutForm>
                         </Elements>
                     </div>
                 </div>
