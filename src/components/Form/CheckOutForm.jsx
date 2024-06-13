@@ -3,12 +3,13 @@ import './CheckOutForm.css'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import PropTypes from 'prop-types';
 import axiosSecure from '@/api';
+import useAuth from '@/hooks/useAuth';
 
 
 const CheckoutForm = ({ selectedPack }) => {
     const stripe = useStripe();
     const elements = useElements();
-    console.log(selectedPack);
+    const {user} = useAuth();
 
     const [clientSecret, setClientSecret] = useState();
     const [error, setError] = useState('');
@@ -30,7 +31,6 @@ const CheckoutForm = ({ selectedPack }) => {
         const {data} = await axiosSecure.post('/create-payment-intent', selectedPack)
         setClientSecret(data?.clientSecret)
     }
-    console.log(clientSecret);
 
     const handleSubmit = async (event) => {
         // Block native form submission.
@@ -60,11 +60,44 @@ const CheckoutForm = ({ selectedPack }) => {
 
         if (error) {
             console.log('[error]', error);
-            setError(error)
+            setError(error);
+            return
         } else {
             console.log('[PaymentMethod]', paymentMethod);
             setError('')
         }
+
+        const {error:confirmError, paymentIntent} = await stripe.confirmCardPayment(clientSecret, {
+            payment_method:{
+                card:card,
+                billing_details:{
+                    email:user?.email,
+                    name:user?.displayName,
+                },
+            },
+        })
+
+        if(confirmError){
+            console.log(confirmError);
+            setError(confirmError.message);
+            setPrecessing(false);
+            return
+        }
+
+        if(paymentIntent.status === 'succeeded'){
+            const paymentInfo = {
+                package: selectedPack?.price,
+                limit: selectedPack?.limit,
+                userEmail: user?.email,
+                userName: user?.displayName,
+                transactionId: paymentIntent?.id,
+                date: new Date(),
+            }
+            console.log(paymentInfo);
+            
+        }
+
+        setPrecessing(false)
     };
 
     return (
